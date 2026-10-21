@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASEAN Visa AI | Intelligent Immigration & Advisory Platform</title>
+  <meta name="description" content="AI-powered visa and immigration platform for Southeast Asian nations, built with high-performance SSE streaming, Vector RAG, and multi-LLM resilience.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <button id="toggle-sidebar-btn" class="icon-btn mobile-only" aria-label="Toggle Sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="brand">
+        <div class="brand-logo">
+          <span class="logo-globe">🌏</span>
+          <span class="brand-badge-ai">AI</span>
+        </div>
+        <div class="brand-text">
+          <div class="brand-title">aseanvisa<span>.com</span></div>
+          <div class="brand-sub">Intelligent Immigration Platform</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Architecture Status Badges -->
+    <div class="header-center">
+      <div class="telemetry-pill" title="Current Active LLM Provider">
+        <span class="status-dot green" id="provider-dot"></span>
+        <span class="label">LLM:</span>
+        <select id="model-selector" class="header-select">
+          <option value="gpt-4o">OpenAI GPT-4o (Primary)</option>
+          <option value="claude-3-5">Claude 3.5 Sonnet (Secondary)</option>
+          <option value="gemini-1-5">Gemini 1.5 Pro (Fallback)</option>
+        </select>
+      </div>
+
+      <div class="telemetry-pill" title="Redis Semantic Caching Status">
+        <span class="status-dot purple"></span>
+        <span class="label">Semantic Cache:</span>
+        <span class="val" id="header-cache-status">Active (≥0.96)</span>
+      </div>
+
+      <div class="telemetry-pill" title="Sliding-Window Rate Limiter">
+        <span class="status-dot blue"></span>
+        <span class="label">Rate Limit:</span>
+        <span class="val" id="header-rate-limit">29/30 RPM</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button id="toggle-telemetry-btn" class="btn btn-outline" title="Toggle Architecture & Telemetry Inspector">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Telemetry</span>
+      </button>
+      <button id="settings-btn" class="icon-btn" title="System Settings & Backend Mode">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="app-layout">
+    <!-- Left Navigation Sidebar -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-top">
+        <button id="new-chat-btn" class="btn btn-primary w-full">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>New Visa Inquiry</span>
+        </button>
+      </div>
+
+      <!-- Quick Country Portals - All 10 ASEAN Member States -->
+      <div class="sidebar-section">
+        <div class="section-title">ASEAN Member Destinations (10 States)</div>
+        <div class="country-list">
+          <button class="country-item active" data-country="thailand">
+            <span class="flag">🇹🇭</span>
+            <div class="country-info">
+              <span class="c-name">Thailand</span>
+              <span class="c-tag">DTV, LTR, Tourist e-Visa</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="vietnam">
+            <span class="flag">🇻🇳</span>
+            <div class="country-info">
+              <span class="c-name">Vietnam</span>
+              <span class="c-tag">90-Day E-Visa, DT Business</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="indonesia">
+            <span class="flag">🇮🇩</span>
+            <div class="country-info">
+              <span class="c-name">Indonesia</span>
+              <span class="c-tag">e-VOA (B1), E33G Nomad, KITAS</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="malaysia">
+            <span class="flag">🇲🇾</span>
+            <div class="country-info">
+              <span class="c-name">Malaysia</span>
+              <span class="c-tag">eVISA, DE Rantau, MM2H</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="singapore">
+            <span class="flag">🇸🇬</span>
+            <div class="country-info">
+              <span class="c-name">Singapore</span>
+              <span class="c-tag">SG Arrival Card, ONE Pass, Visa</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="philippines">
+            <span class="flag">🇵🇭</span>
+            <div class="country-info">
+              <span class="c-name">Philippines</span>
+              <span class="c-tag">eTravel, 9(a), SRRV (Age 50+)</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="myanmar">
+            <span class="flag">🇲🇲</span>
+            <div class="country-info">
+              <span class="c-name">Myanmar</span>
+              <span class="c-tag">Tourist (28d), Business (70d)</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="cambodia">
+            <span class="flag">🇰🇭</span>
+            <div class="country-info">
+              <span class="c-name">Cambodia</span>
+              <span class="c-tag">Type T ($36), Type E ($42), e-Arrival</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="laos">
+            <span class="flag">🇱🇦</span>
+            <div class="country-info">
+              <span class="c-name">Laos</span>
+              <span class="c-tag">Tourist eVisa ($50), 30d Stay</span>
+            </div>
+          </button>
+          <button class="country-item" data-country="brunei">
+            <span class="flag">🇧🇳</span>
+            <div class="country-info">
+              <span class="c-name">Brunei</span>
+              <span class="c-tag">E-Arrival Card, Visa Exemption</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Knowledge Base & Vector Index Status -->
+      <div class="sidebar-section">
+        <div class="section-title">Vector RAG Knowledge Base</div>
+        <div class="kb-card">
+          <div class="kb-stat">
+            <span class="kb-label">Vector Database</span>
+            <span class="kb-val">pgvector / Qdrant</span>
+          </div>
+          <div class="kb-stat">
+            <span class="kb-label">Indexed Coverage</span>
+            <span class="kb-val" id="kb-doc-count">10 Member States</span>
+          </div>
+          <div class="kb-stat">
+            <span class="kb-label">Embedding Model</span>
+            <span class="kb-val">text-embedding-3</span>
+          </div>
+          <div class="kb-stat">
+            <span class="kb-label">Chunk Strategy</span>
+            <span class="kb-val">512 Tok / 50 Overlap</span>
+          </div>
+          <button id="open-ingest-modal-btn" class="btn btn-sm btn-ghost w-full mt-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>+ Ingest Document</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Security Guardrail Status -->
+      <div class="sidebar-section sidebar-footer-section">
+        <div class="security-card">
+          <div class="security-title">
+            <span class="status-shield">🛡️</span>
+            <span>Security & Guardrails</span>
+          </div>
+          <p class="security-desc">Prompt injection defense active. System delimiter isolation & zero client API exposure.</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Main Panel: AI Chat Experience -->
+    <main class="chat-viewport">
+      <!-- Conversation Header Bar -->
+      <div class="chat-header">
+        <div class="chat-title-group">
+          <h1 class="chat-title" id="current-conversation-title">ASEAN Visa Assistant & RAG Advisor</h1>
+          <span class="chat-sub">Real-time SSE streaming with ground-truth citations</span>
+        </div>
+        <div class="chat-actions">
+          <button id="clear-chat-btn" class="btn btn-sm btn-outline" title="Clear conversation history">
+            Clear Chat
+          </button>
+          <button id="export-chat-btn" class="btn btn-sm btn-outline" title="Export conversation as JSON/Markdown">
+            Export
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Stream Window -->
+      <div class="messages-container" id="messages-container">
+        <!-- Welcome Greeting Card -->
+        <div class="message-item assistant welcome-message">
+          <div class="message-avatar">🌏</div>
+          <div class="message-body">
+            <div class="message-author">
+              <span class="author-name">ASEAN Visa Intelligence Engine</span>
+              <span class="author-model-badge" id="welcome-badge">gpt-4o • Grounded RAG</span>
+            </div>
+            <div class="message-content">
+              <p>Welcome to <strong>aseanvisa.com</strong>. I am your specialized immigration and visa AI advisor for Southeast Asia, architected in accordance with our system design specification.</p>
+              
+              <div class="feature-pills">
+                <div class="feature-item">⚡ <strong>SSE Streaming:</strong> Sub-second Time to First Token</div>
+                <div class="feature-item">📚 <strong>Deterministic RAG:</strong> Grounded in official government immigration regulations</div>
+                <div class="feature-item">🌐 <strong>10 Member States:</strong> Independent sovereign visa frameworks for all ASEAN nations</div>
+                <div class="feature-item">🛡️ <strong>Safety Delimiters:</strong> Protected against prompt injection & hallucinations</div>
+              </div>
+
+              <p class="prompt-instruction">Select a verified inquiry or ask any question below:</p>
+
+              <div class="preset-questions">
+                <button class="preset-btn" data-query="What are the verified requirements, proof of funds, and validity of Thailand's Destination Thailand Visa (DTV)?">
+                  🇹🇭 Thailand Destination Visa (DTV)
+                </button>
+                <button class="preset-btn" data-query="How does Malaysia's DE Rantau Nomad Pass compare to Indonesia's E33G Remote Worker Visa in terms of income requirements?">
+                  🇲🇾 vs 🇮🇩 Malaysia DE Rantau vs Indonesia E33G
+                </button>
+                <button class="preset-btn" data-query="What is the official status of the proposed ASEAN Schengen-style 'Six Countries, One Destination' unified visa initiative?">
+                  🌏 'Six Countries, One Destination' Unified Visa Status
+                </button>
+                <button class="preset-btn" data-query="What are the official fees and permitted stays for e-visas in Vietnam, Cambodia, Laos, and Myanmar?">
+                  🇻🇳 🇰🇭 🇱🇦 🇲🇲 E-Visa Fees & Length of Stay
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Prompt & Retrieved Context Accordion Drawer -->
+      <div class="context-drawer collapsed" id="context-drawer">
+        <div class="context-drawer-header" id="context-drawer-toggle">
+          <div class="context-header-left">
+            <span class="drawer-icon">🔍</span>
+            <span class="drawer-title">Active RAG Context & Injected System Prompt</span>
+            <span class="badge" id="injected-chunk-count">0 Chunks Injected</span>
+          </div>
+          <span class="drawer-chevron">▼</span>
+        </div>
+        <div class="context-drawer-body" id="context-drawer-body">
+          <div class="context-tabs">
+            <button class="tab-btn active" data-tab="injected-prompt">Assembled System Prompt</button>
+            <button class="tab-btn" data-tab="vector-chunks">Retrieved Vector Chunks</button>
+          </div>
+          <div class="tab-content active" id="tab-injected-prompt">
+            <pre class="code-block" id="system-prompt-preview">Awaiting first query to assemble context...</pre>
+          </div>
+          <div class="tab-content" id="tab-vector-chunks">
+            <div class="chunks-preview-list" id="chunks-preview-list">
+              <p class="text-muted">No retrieval executed yet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prompt Input Tray -->
+      <div class="chat-input-wrapper">
+        <form id="chat-form" class="chat-form">
+          <div class="input-controls-bar">
+            <!-- Simulated Multimodal Attachment -->
+            <button type="button" id="attach-file-btn" class="icon-btn" title="Simulate Document / Passport Upload (Multimodal)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <span id="attached-file-badge" class="attachment-pill hidden">
+              <span class="att-name" id="attachment-name">passport_scan.pdf</span>
+              <button type="button" id="remove-att-btn" class="remove-att">&times;</button>
+            </span>
+            <div class="input-tags">
+              <span class="tag-badge">RAG Active</span>
+              <span class="tag-badge" id="input-model-tag">GPT-4o</span>
+            </div>
+          </div>
+
+          <div class="input-row">
+            <textarea
+              id="prompt-input"
+              rows="1"
+              placeholder="Ask any ASEAN visa requirement, eligibility criterion, or processing time..."
+              required
+            ></textarea>
+
+            <button type="button" id="stop-stream-btn" class="btn btn-danger hidden" title="Abort generation stream">
+              <span class="stop-icon">■</span>
+              <span>Stop</span>
+            </button>
+
+            <button type="submit" id="send-btn" class="btn btn-primary" title="Send message (Enter)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              <span>Send</span>
+            </button>
+          </div>
+          <div class="input-footer">
+            <span class="footer-hint">Press <strong>Enter</strong> to send, <strong>Shift + Enter</strong> for newline</span>
+            <p>Developed By Cho Lae Lae Yin(21.10.2026)</p>
+            <span class="delimiter-guard-indicator">🔒 Prompt Isolation: <code>&lt;user_untrusted_input&gt;</code></span>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Right Side Panel: System Architecture & Telemetry Inspector -->
+    <aside class="app-telemetry-sidebar" id="telemetry-sidebar">
+      <div class="telemetry-header">
+        <div class="telemetry-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span>Architecture & Telemetry</span>
+        </div>
+        <button id="close-telemetry-btn" class="icon-btn" aria-label="Close Inspector">
+          &times;
+        </button>
+      </div>
+
+      <div class="telemetry-scroll-area">
+        <!-- Live Performance Metrics -->
+        <div class="telemetry-card">
+          <div class="card-heading">Live Request Telemetry</div>
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-label">TTFT (Time to First Token)</div>
+              <div class="metric-value" id="kpi-ttft">-- ms</div>
+              <div class="metric-target">Target: &lt; 800ms</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Tokens / Sec</div>
+              <div class="metric-value" id="kpi-tps">-- t/s</div>
+              <div class="metric-target">Speed</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Token Count</div>
+              <div class="metric-value" id="kpi-tokens">0 tok</div>
+              <div class="metric-target">In / Out</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-label">Est. Cost</div>
+              <div class="metric-value" id="kpi-cost">$0.0000</div>
+              <div class="metric-target">Estimated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Redis Semantic Cache Status -->
+        <div class="telemetry-card">
+          <div class="card-heading">
+            <span>Redis Semantic Cache</span>
+            <span class="badge" id="telemetry-cache-badge">STANDBY</span>
+          </div>
+          <div class="cache-details">
+            <div class="detail-row">
+              <span>Similarity Score:</span>
+              <strong id="cache-sim-score">0.000</strong>
+            </div>
+            <div class="detail-row">
+              <span>Threshold Required:</span>
+              <strong>≥ 0.960</strong>
+            </div>
+            <div class="detail-row">
+              <span>Cache Latency:</span>
+              <strong id="cache-latency">12ms vs ~850ms Live</strong>
+            </div>
+            <div class="detail-row">
+              <span>Total Cache Hits:</span>
+              <strong id="cache-total-hits">0</strong>
+            </div>
+          </div>
+          <button id="toggle-semantic-cache-btn" class="btn btn-sm btn-outline w-full mt-2">
+            Toggle Cache State (Active)
+          </button>
+        </div>
+
+        <!-- Vector Search Relevance (RAG) -->
+        <div class="telemetry-card">
+          <div class="card-heading">
+            <span>Vector Retrieval (pgvector)</span>
+            <span class="badge" id="rag-retrieval-badge">Ready</span>
+          </div>
+          <div class="rag-candidate-list" id="rag-candidate-list">
+            <div class="rag-empty-hint">Ask a question to view cosine similarity scores for top chunks.</div>
+          </div>
+        </div>
+
+        <!-- Multi-LLM Circuit Breaker Simulation -->
+        <div class="telemetry-card">
+          <div class="card-heading">Multi-Provider Circuit Breaker</div>
+          <p class="telemetry-desc">Simulate primary provider outages (429 RateLimit or 500 Internal Error) to test automatic failover:</p>
+          <div class="circuit-status-display">
+            <div class="circuit-node active" id="circuit-node-openai">
+              <span class="node-indicator"></span>
+              <span class="node-name">OpenAI</span>
+            </div>
+            <div class="circuit-arrow">➔</div>
+            <div class="circuit-node" id="circuit-node-claude">
+              <span class="node-indicator"></span>
+              <span class="node-name">Claude</span>
+            </div>
+            <div class="circuit-arrow">➔</div>
+            <div class="circuit-node" id="circuit-node-gemini">
+              <span class="node-indicator"></span>
+              <span class="node-name">Gemini</span>
+            </div>
+          </div>
+          <div class="circuit-actions">
+            <button id="simulate-outage-btn" class="btn btn-sm btn-danger w-full">
+              Simulate 429 Error on Primary LLM
+            </button>
+            <button id="reset-circuit-btn" class="btn btn-sm btn-ghost w-full mt-1">
+              Reset Circuit to Primary (OpenAI)
+            </button>
+          </div>
+        </div>
+
+        <!-- Raw SSE Event Stream Inspector -->
+        <div class="telemetry-card">
+          <div class="card-heading">
+            <span>Raw SSE Protocol Inspector</span>
+            <span class="pulse-indicator" id="sse-pulse"></span>
+          </div>
+          <pre class="sse-raw-terminal" id="sse-raw-terminal">Waiting for active SSE stream connection...</pre>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Document Ingestion Modal -->
+  <div class="modal-overlay hidden" id="ingest-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">Ingest Legal / Visa Document</h3>
+        <button id="close-ingest-modal-btn" class="icon-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Upload official ASEAN immigration circulars, visa acts, or embassy notices to be chunked (512 tokens) and embedded into pgvector.</p>
+        <div class="drop-zone" id="modal-drop-zone">
+          <div class="drop-icon">📄</div>
+          <div class="drop-text">Drag & drop immigration PDF or Markdown</div>
+          <span class="drop-hint">Supported: .pdf, .md, .txt (Max 10MB)</span>
+          <input type="file" id="modal-file-input" class="hidden-file-input" accept=".pdf,.md,.txt">
+          <button type="button" id="browse-files-btn" class="btn btn-sm btn-outline mt-2">Browse Files</button>
+        </div>
+        
+        <div class="ingest-progress-container hidden" id="ingest-progress-container">
+          <div class="progress-label">
+            <span id="ingest-step-label">Chunking document...</span>
+            <span id="ingest-percent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="ingest-progress-bar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="cancel-ingest-btn" class="btn btn-outline">Cancel</button>
+        <button id="start-ingest-btn" class="btn btn-primary" disabled>Start Ingestion & Embed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings & Backend Switcher Modal -->
+  <div class="modal-overlay hidden" id="settings-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 class="modal-title">System & Backend Configuration</h3>
+        <button id="close-settings-modal-btn" class="icon-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="execution-mode-select">Execution Runtime Mode</label>
+          <select id="execution-mode-select" class="form-control">
+            <option value="simulated">Client-Side High-Fidelity Simulation (Embedded SSE & Vector DB)</option>
+            <option value="live-api">Connect to Live FastAPI Backend (http://localhost:8000/api/v1)</option>
+          </select>
+          <span class="form-help">Client simulation runs the full RAG pipeline, SSE parser, and cache internally without requiring API keys.</span>
+        </div>
+
+        <div class="form-group hidden" id="live-api-config-group">
+          <label class="form-label" for="live-api-url">FastAPI Endpoint URL</label>
+          <input type="text" id="live-api-url" class="form-control" value="http://localhost:8000/api/v1/chat/stream">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="temp-slider">Temperature: <span id="temp-val">0.2</span></label>
+          <input type="range" id="temp-slider" min="0.0" max="1.0" step="0.1" value="0.2" class="form-range">
+          <span class="form-help">Lower values (0.0 - 0.3) ensure strict adherence to retrieved legal chunks.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cache-thresh-slider">Semantic Cache Cosine Threshold: <span id="thresh-val">0.96</span></label>
+          <input type="range" id="cache-thresh-slider" min="0.80" max="0.99" step="0.01" value="0.96" class="form-range">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="save-settings-btn" class="btn btn-primary w-full">Save Configuration</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
