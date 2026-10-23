@@ -609,3 +609,45 @@ This table maps the core guidelines from [`ai_web_development_guide.md`](file://
 | **4. Prompt Injection Defense** | Input sanitization, delimiters, and guardrail layer (`Section 6.3`) | Red-teaming and injection attack test suite. |
 | **4. Semantic Caching** | Vector similarity cache in Redis ($\ge 0.96$ threshold) (`Section 6.4`) | Cache hit latency and freshness invalidation tests. |
 | **4. Fallback Models** | Automated circuit-breaker failover: OpenAI $\rightarrow$ Claude $\rightarrow$ Gemini (`Section 6.5`) | Chaos engineering simulating 500 error on primary API. |
+
+---
+
+## 11. Product UI Theme Redesign
+
+### Objective
+
+Reposition the interface as a trustworthy ASEAN travel and visa concierge. The current dark, telemetry-heavy styling emphasizes AI infrastructure more than the visitor's primary needs: choosing a destination, understanding visa options, and getting clear, source-grounded guidance.
+
+### Visual Direction
+
+- **Overall feel:** Welcoming, calm, travel-oriented, and credible—closer to a regional travel advisory service than a developer operations dashboard.
+- **Core palette:** Warm ivory and soft sand for the page and surfaces; deep rainforest green for primary actions and navigation states; restrained brass or terracotta accents for highlights.
+- **Contrast and legibility:** Use dark, high-contrast text on light surfaces for long-form visa guidance, with clear borders and focus states.
+- **Visual cues:** Use subtle passport-stamp, itinerary, and official-document motifs in cards and section details. Keep decoration restrained so it does not compete with requirements or citations.
+- **Typography:** Retain the existing readable sans-serif family unless implementation testing identifies a concrete usability issue; prioritize hierarchy and comfortable reading over technical ornament.
+
+### Planned Interface Changes
+
+1. **Establish a travel-first hierarchy.** Make destination selection and visa inquiry the most prominent parts of the experience. Present the assistant as a practical visa guide rather than an “intelligence engine.”
+2. **Make country destinations feel central.** Restyle the ASEAN country list as a clear destination navigator, with an easily recognized active state and readable visa-category summaries.
+3. **Reframe the welcome experience.** Replace infrastructure-led introductory copy and feature emphasis with a concise explanation of supported visa guidance, country coverage, and how to ask a useful question. Keep the existing suggested inquiries, but style them as practical travel prompts.
+4. **Present guidance as a readable service conversation.** Use calm light message surfaces, clear distinction between visitor questions and advisor replies, and prominent, easy-to-follow source citations.
+5. **Keep technical controls secondary.** Retain the architecture and telemetry inspector, model selection, RAG context, ingestion, settings, and security information for users who need them. Style these as supporting or advanced tools so they do not dominate the primary visa-advice flow.
+6. **Use one consistent visual system.** Update shared CSS tokens and apply them across the header, navigation, buttons, chat, cards, context drawer, inspector, and modals; avoid leaving isolated dark-dashboard surfaces behind.
+7. **Preserve responsive and accessible behavior.** Keep existing interactions and responsive layouts, with visible keyboard focus, sufficient contrast, and touch-friendly controls.
+
+### Implementation Notes
+
+- **`styles.css`:** Replace the current dark blue palette with semantic light-surface, rainforest-green, and warm-accent tokens. Apply those tokens consistently to page backgrounds, text, borders, controls, message cards, status displays, dialogs, and responsive states.
+- **`index.html`:** Update user-facing labels and welcome copy where they currently foreground architecture over visa assistance. Preserve element IDs, form controls, data attributes, and button behavior used by `app.js`.
+- **`app.js`:** No behavioral changes are planned. Update only if required to keep existing interactions working with revised markup; avoid changing visa guidance, retrieval, or telemetry behavior as part of the visual redesign.
+
+### Acceptance Criteria
+
+- The first impression communicates ASEAN destinations and practical visa help, not an AI operations console.
+- The warm neutral, rainforest-green, and restrained warm-accent palette is consistent across the complete page, including advanced panels and modals.
+- Destination selection, inquiry entry, assistant replies, and citations remain clear and easy to use.
+- Existing chat, country selection, settings, telemetry, ingestion, and responsive interactions continue to work.
+- Text and controls remain legible, keyboard-operable, and visibly focused on desktop and mobile layouts.
+
+**Status:** Implemented. The primary interface now uses the travel-first palette and messaging, with architecture telemetry available as a secondary drawer.

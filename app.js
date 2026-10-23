@@ -671,11 +671,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Telemetry drawer toggles
   toggleTelemetryBtn.addEventListener("click", () => {
-    telemetrySidebar.classList.toggle("open");
+    const isOpen = telemetrySidebar.classList.toggle("open");
+    toggleTelemetryBtn.setAttribute("aria-expanded", String(isOpen));
   });
 
   closeTelemetryBtn.addEventListener("click", () => {
     telemetrySidebar.classList.remove("open");
+    toggleTelemetryBtn.setAttribute("aria-expanded", "false");
   });
 
   toggleSidebarBtn.addEventListener("click", () => {
