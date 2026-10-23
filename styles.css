@@ -1,34 +1,34 @@
 /* ==========================================================================
    ASEAN Visa AI Platform - Stylesheet
-   Design Baseline: design.md & ai_web_development_guide.md
+   Design Baseline: ASEAN travel concierge theme
    ========================================================================== */
 
 :root {
   /* Color Palette */
-  --bg-main: #0a0f1d;
-  --bg-surface: #10182c;
-  --bg-card: #15223c;
-  --bg-elevated: #1c2d50;
-  --bg-hover: #223762;
-  
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-focus: #38bdf8;
+  --bg-main: #f5f2e9;
+  --bg-surface: #fffdf8;
+  --bg-card: #f1ecdf;
+  --bg-elevated: #e8dfca;
+  --bg-hover: #e9e3d6;
 
-  --text-main: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-brand: #38bdf8;
+  --border-subtle: #e4ddcf;
+  --border-strong: #cfc5b3;
+  --border-focus: #a7603d;
 
-  --primary: #0284c7;
-  --primary-hover: #0369a1;
-  --primary-glow: rgba(2, 132, 199, 0.35);
+  --text-main: #26352c;
+  --text-secondary: #4f5e53;
+  --text-muted: #68766b;
+  --text-brand: #285c43;
 
-  --accent-teal: #14b8a6;
-  --accent-emerald: #10b981;
-  --accent-purple: #a855f7;
-  --accent-amber: #f59e0b;
-  --accent-rose: #f43f5e;
+  --primary: #285c43;
+  --primary-hover: #1e4a35;
+  --primary-glow: rgba(40, 92, 67, 0.18);
+
+  --accent-teal: #39796b;
+  --accent-emerald: #31704e;
+  --accent-purple: #735b87;
+  --accent-amber: #a7603d;
+  --accent-rose: #b54745;
 
   /* Typography */
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -56,7 +56,9 @@
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--bg-main);
+  background:
+    radial-gradient(ellipse at 75% 0%, rgba(193, 156, 97, 0.1), transparent 34rem),
+    var(--bg-main);
   color: var(--text-main);
   line-height: 1.5;
   overflow: hidden;
@@ -98,12 +100,12 @@ body {
   position: relative;
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #0ea5e9, #0d9488);
+  background: linear-gradient(135deg, #285c43, #7d8c57);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
+  box-shadow: 0 2px 10px rgba(40, 92, 67, 0.2);
 }
 
 .logo-globe {
@@ -114,8 +116,8 @@ body {
   position: absolute;
   bottom: -4px;
   right: -4px;
-  background: #f43f5e;
-  color: #fff;
+  background: var(--accent-amber);
+  color: var(--text-main);
   font-size: 0.55rem;
   font-weight: 800;
   padding: 1px 4px;
@@ -184,7 +186,7 @@ body {
 
 .header-select option {
   background: var(--bg-surface);
-  color: #fff;
+  color: var(--text-main);
 }
 
 .status-dot {
@@ -195,10 +197,10 @@ body {
 }
 
 .status-dot.green { background: #10b981; box-shadow: 0 0 6px #10b981; }
-.status-dot.purple { background: #a855f7; box-shadow: 0 0 6px #a855f7; }
-.status-dot.blue { background: #38bdf8; box-shadow: 0 0 6px #38bdf8; }
-.status-dot.amber { background: #f59e0b; box-shadow: 0 0 6px #f59e0b; }
-.status-dot.red { background: #f43f5e; box-shadow: 0 0 6px #f43f5e; }
+.status-dot.purple { background: var(--accent-purple); box-shadow: 0 0 6px var(--accent-purple); }
+.status-dot.blue { background: var(--accent-teal); box-shadow: 0 0 6px var(--accent-teal); }
+.status-dot.amber { background: var(--accent-amber); box-shadow: 0 0 6px var(--accent-amber); }
+.status-dot.red { background: var(--accent-rose); box-shadow: 0 0 6px var(--accent-rose); }
 
 .header-right {
   display: flex;
@@ -227,7 +229,7 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary), #0284c7);
+  background: linear-gradient(135deg, var(--primary), #397355);
   color: #fff;
   box-shadow: 0 2px 10px var(--primary-glow);
 }
@@ -260,12 +262,12 @@ body {
 }
 
 .btn-danger {
-  background: #e11d48;
+  background: #a83e3e;
   color: #fff;
 }
 
 .btn-danger:hover {
-  background: #be123c;
+  background: #8d3030;
 }
 
 .btn-sm {
@@ -304,6 +306,11 @@ body {
 .mt-1 { margin-top: 0.25rem; }
 .mt-2 { margin-top: 0.5rem; }
 .hidden { display: none !important; }
+
+:focus-visible {
+  outline: 3px solid var(--border-focus);
+  outline-offset: 2px;
+}
 
 /* ==========================================================================
    Application Layout (3-Column View)
@@ -395,9 +402,9 @@ body {
 }
 
 .country-item.active {
-  background: var(--bg-card);
+  background: #e4ecdf;
   border-color: var(--primary);
-  box-shadow: 0 0 10px rgba(2, 132, 199, 0.15);
+  box-shadow: inset 3px 0 0 var(--primary);
 }
 
 .country-item.active .c-name {
@@ -435,8 +442,8 @@ body {
 
 /* Security Status */
 .security-card {
-  background: rgba(16, 185, 129, 0.06);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: #edf3e9;
+  border: 1px solid #cbdcc5;
   border-radius: var(--radius-md);
   padding: 0.75rem;
 }
@@ -466,7 +473,9 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--bg-main);
+  background:
+    radial-gradient(ellipse at 78% 2%, rgba(193, 156, 97, 0.11), transparent 32rem),
+    var(--bg-main);
   position: relative;
   min-width: 0;
 }
@@ -477,8 +486,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(16, 24, 44, 0.6);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 253, 248, 0.88);
+  backdrop-filter: blur(12px);
 }
 
 .chat-title-group {
@@ -533,13 +542,29 @@ body {
 }
 
 .message-item.assistant .message-avatar {
-  background: linear-gradient(135deg, #0284c7, #0d9488);
-  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+  background: linear-gradient(135deg, #285c43, #7d8c57);
+  box-shadow: 0 2px 8px rgba(40, 92, 67, 0.2);
 }
 
 .message-item.user .message-avatar {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-strong);
+  background: #ead8c6;
+  border: 1px solid #d8c2ac;
+}
+
+.message-item.user .message-body {
+  align-items: flex-end;
+}
+
+.message-item.user .message-content {
+  max-width: min(80%, 620px);
+  padding: 0.7rem 1rem;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--primary);
+  color: #fff;
+}
+
+.message-item.user .message-content p {
+  margin: 0;
 }
 
 .message-body {
@@ -587,6 +612,10 @@ body {
 }
 
 .message-content strong {
+  color: #213c2b;
+}
+
+.message-item.user .message-content strong {
   color: #fff;
 }
 
@@ -619,7 +648,7 @@ body {
 }
 
 .message-content tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(40, 92, 67, 0.035);
 }
 
 /* Citations & Pills */
@@ -627,8 +656,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: #edf3e9;
+  border: 1px solid #c6d8c0;
   color: var(--text-brand);
   font-size: 0.72rem;
   font-family: var(--font-mono);
@@ -641,7 +670,7 @@ body {
 }
 
 .citation-pill:hover {
-  background: rgba(56, 189, 248, 0.25);
+  background: #dfeada;
   border-color: var(--text-brand);
 }
 
@@ -651,6 +680,7 @@ body {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
+  box-shadow: 0 8px 28px rgba(68, 57, 39, 0.06);
 }
 
 .feature-pills {
@@ -667,6 +697,10 @@ body {
   padding: 0.6rem 0.75rem;
   font-size: 0.78rem;
   color: var(--text-secondary);
+}
+
+.feature-item strong {
+  color: var(--primary);
 }
 
 .prompt-instruction {
@@ -686,9 +720,9 @@ body {
 }
 
 .preset-btn {
-  background: var(--bg-card);
+  background: var(--bg-surface);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   color: var(--text-main);
   padding: 0.4rem 0.85rem;
   font-size: 0.78rem;
@@ -698,9 +732,9 @@ body {
 }
 
 .preset-btn:hover {
-  background: var(--bg-elevated);
-  border-color: var(--border-focus);
-  color: #fff;
+  background: #edf3e9;
+  border-color: var(--primary);
+  color: var(--primary);
   transform: translateY(-1px);
 }
 
@@ -822,7 +856,7 @@ body {
   padding: 0.75rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   white-space: pre-wrap;
   max-height: 180px;
   overflow-y: auto;
@@ -847,13 +881,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 24px rgba(68, 57, 39, 0.1);
   transition: border-color var(--transition-fast);
 }
 
 .chat-form:focus-within {
   border-color: var(--border-focus);
-  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.15);
+  box-shadow: 0 0 0 3px rgba(167, 96, 61, 0.12), 0 6px 24px rgba(68, 57, 39, 0.1);
 }
 
 .input-controls-bar {
@@ -883,7 +917,7 @@ body {
 }
 
 .remove-att:hover {
-  color: #f43f5e;
+  color: var(--accent-rose);
 }
 
 .input-tags {
@@ -914,7 +948,7 @@ body {
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: var(--text-main);
   font-family: var(--font-sans);
   font-size: 0.92rem;
   resize: none;
@@ -955,6 +989,17 @@ body {
   flex-direction: column;
   height: 100%;
   z-index: 20;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  transform: translateX(100%);
+  transition: transform var(--transition-normal);
+  box-shadow: -4px 0 20px rgba(38, 53, 44, 0.16);
+}
+
+.app-telemetry-sidebar.open {
+  transform: translateX(0);
 }
 
 .telemetry-header {
@@ -984,7 +1029,7 @@ body {
 }
 
 .telemetry-card {
-  background: var(--bg-card);
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 0.85rem;
@@ -1054,7 +1099,7 @@ body {
 
 .detail-row strong {
   font-family: var(--font-mono);
-  color: #fff;
+  color: var(--text-main);
 }
 
 /* RAG Candidate Visualizer */
@@ -1113,7 +1158,7 @@ body {
 
 .rag-score-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #0284c7, #10b981);
+  background: linear-gradient(90deg, var(--primary), #71864e);
 }
 
 .rag-chunk-snippet {
@@ -1159,13 +1204,13 @@ body {
 }
 
 .circuit-node.active .node-indicator {
-  background: #10b981;
-  box-shadow: 0 0 8px #10b981;
+  background: #31704e;
+  box-shadow: 0 0 8px rgba(49, 112, 78, 0.5);
 }
 
 .circuit-node.failed .node-indicator {
-  background: #f43f5e;
-  box-shadow: 0 0 8px #f43f5e;
+  background: var(--accent-rose);
+  box-shadow: 0 0 8px rgba(181, 71, 69, 0.45);
 }
 
 .circuit-node .node-name {
@@ -1181,13 +1226,13 @@ body {
 
 /* SSE Terminal */
 .sse-raw-terminal {
-  background: #060913;
+  background: #26352c;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   padding: 0.6rem;
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  color: #a5f3fc;
+  color: #d9e7d7;
   height: 140px;
   overflow-y: auto;
   white-space: pre-wrap;
@@ -1219,7 +1264,7 @@ body {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(38, 53, 44, 0.48);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -1237,7 +1282,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 16px 48px rgba(38, 53, 44, 0.2);
 }
 
 .modal-header {
@@ -1293,7 +1338,7 @@ body {
 .drop-text {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--text-main);
 }
 
 .drop-hint {
@@ -1330,7 +1375,7 @@ body {
 .progress-bar-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #0284c7, #10b981);
+  background: linear-gradient(90deg, var(--primary), #71864e);
   transition: width 0.2s ease;
 }
 
@@ -1361,7 +1406,7 @@ body {
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
-  color: #fff;
+  color: var(--text-main);
   font-family: var(--font-sans);
   font-size: 0.825rem;
   outline: none;
@@ -1388,18 +1433,8 @@ body {
    ========================================================================== */
 
 @media (max-width: 1200px) {
-  .app-telemetry-sidebar {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    transform: translateX(100%);
-    transition: transform var(--transition-normal);
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
-  }
-
-  .app-telemetry-sidebar.open {
-    transform: translateX(0);
+  .header-center {
+    display: none;
   }
 }
 
@@ -1411,15 +1446,11 @@ body {
     bottom: 0;
     transform: translateX(-100%);
     transition: transform var(--transition-normal);
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 0 20px rgba(38, 53, 44, 0.16);
   }
 
   .app-sidebar.open {
     transform: translateX(0);
-  }
-
-  .header-center {
-    display: none;
   }
 
   .mobile-only {
@@ -1431,4 +1462,67 @@ body {
   .mobile-only {
     display: none !important;
   }
+}
+
+@media (max-width: 420px) {
+  .app-header {
+    padding: 0 0.75rem;
+  }
+
+  .brand-title {
+    font-size: 0.95rem;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  #toggle-telemetry-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+
+  #toggle-telemetry-btn span {
+    display: none;
+  }
+
+  .app-telemetry-sidebar {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .chat-header {
+    padding: 0.75rem 1rem;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .chat-actions {
+    flex-shrink: 0;
+  }
+
+  .chat-actions .btn {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .messages-container {
+    padding: 1rem;
+  }
+
+  .message-item.user .message-content {
+    max-width: 100%;
+  }
+}
+
+.btn:focus-visible,
+.icon-btn:focus-visible,
+.country-item:focus-visible,
+.preset-btn:focus-visible,
+.tab-btn:focus-visible,
+.header-select:focus-visible,
+#prompt-input:focus-visible,
+.form-control:focus-visible {
+  outline: 3px solid var(--border-focus);
+  outline-offset: 2px;
 }
